@@ -1,367 +1,1272 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Weapon Management System</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Important for mobile scaling -->
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Russo+One&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Share Tech Mono', monospace;
-      background: url('https://www.transparenttextures.com/patterns/camo-fabric.png');
-      background-color: #111;
-      color: #e0e0e0;
-    }
-
-    h1 {
-      font-family: 'Russo One', sans-serif;
-      font-size: 2.2em;
-      text-align: center;
-      padding: 15px;
-      color: #c0ff00;
-      text-shadow: 0 0 10px #556b2f;
-      border-bottom: 3px solid #444;
-      background: rgba(0, 0, 0, 0.6);
-    }
-
-    .section {
-      display: none;
-      padding: 20px;
-    }
-
-    /* NAV */
-    .nav {
-      margin-top: 10px;
-      text-align: center;
-      display: none;
-      flex-wrap: wrap;
-    }
-
-    .nav a {
-      margin: 8px 12px;
-      font-family: 'Share Tech Mono', monospace;
-      color: #c0ff00;
-      text-decoration: none;
-      border-bottom: 2px solid transparent;
-      transition: 0.3s;
-      cursor: pointer;
-      font-size: 1em;
-    }
-
-    .nav a:hover {
-      border-bottom: 2px solid #c0ff00;
-      text-shadow: 0 0 6px #c0ff00;
-    }
-
-    /* LOGIN SECTION */
-    #login {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 80vh;
-      padding: 20px;
-    }
-
-    .login-card {
-      background: rgba(20, 20, 20, 0.95);
-      padding: 30px;
-      border-radius: 10px;
-      border: 2px solid #333;
-      box-shadow: 0 0 20px rgba(192, 255, 0, 0.4);
-      width: 100%;
-      max-width: 350px;
-      text-align: center;
-      animation: fadeIn 0.8s ease;
-    }
-
-    .login-card h2 {
-      font-family: 'Russo One', sans-serif;
-      font-size: 1.4em;
-      margin-bottom: 15px;
-      color: #c0ff00;
-      letter-spacing: 1px;
-    }
-
-    .login-card input {
-      display: block;
-      width: 100%;
-      margin: 12px 0;
-      padding: 12px;
-      font-size: 1em;
-      color: #fff;
-      background: #222;
-      border: 1px solid #555;
-      border-radius: 6px;
-      outline: none;
-      transition: border 0.3s;
-    }
-
-    .login-card input:focus {
-      border-color: #c0ff00;
-      box-shadow: 0 0 6px #c0ff00;
-    }
-
-    .login-card button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 15px;
-      font-size: 1em;
-      font-weight: bold;
-      background: #556b2f;
-      color: #c0ff00;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: 0.3s;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .login-card button:hover {
-      background: #6b8e23;
-      box-shadow: 0 0 15px #c0ff00;
-    }
-
-    #login-msg {
-      color: #ff4d4d;
-      text-align: center;
-      margin-top: 12px;
-    }
-
-    /* WEAPONS SECTION */
-    .weapon-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-    }
-
-    .weapon-card {
-      background: rgba(25, 25, 25, 0.95);
-      border: 2px solid #333;
-      border-radius: 8px;
-      padding: 15px;
-      text-align: center;
-      box-shadow: 0 0 10px rgba(192, 255, 0, 0.3);
-      transition: 0.3s;
-    }
-
-    .weapon-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 0 15px #c0ff00;
-    }
-
-    .weapon-card img {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-      border-radius: 6px;
-      margin-bottom: 10px;
-    }
-
-    .weapon-card h3 {
-      font-family: 'Russo One', sans-serif;
-      font-size: 1.1em;
-      margin: 10px 0;
-      color: #c0ff00;
-    }
-
-    .weapon-card p {
-      margin: 5px 0;
-    }
-
-    .weapon-card button {
-      margin-top: 10px;
-      padding: 8px 15px;
-      font-size: 0.9em;
-      font-weight: bold;
-      background: #556b2f;
-      color: #c0ff00;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .weapon-card button:hover {
-      background: #6b8e23;
-      box-shadow: 0 0 10px #c0ff00;
-    }
-
-    /* CART */
-    #cart-items {
-      background: rgba(25, 25, 25, 0.9);
-      padding: 15px;
-      border-radius: 8px;
-      border: 2px solid #333;
-      max-width: 600px;
-      margin: auto;
-    }
-
-    #cart-items p {
-      margin: 8px 0;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* 📱 MOBILE RESPONSIVE FIXES */
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 1.6em;
-        padding: 10px;
-      }
-
-      .weapon-card img {
-        height: 120px;
-      }
-
-      .weapon-card h3 {
-        font-size: 1em;
-      }
-
-      .nav a {
-        display: inline-block;
-        margin: 5px;
-        font-size: 0.9em;
-      }
-
-      .login-card {
-        padding: 20px;
-      }
-
-      .login-card h2 {
-        font-size: 1.2em;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weapon Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #1a2a3a;
+            --secondary: #0d1b2a;
+            --accent: #ff9a3c;
+            --accent-dark: #ff6b6b;
+            --light: #e0e1dd;
+            --medium: #415a77;
+            --dark: #0d1b2a;
+            --success: #4ad66d;
+            --warning: #ff9a3c;
+            --danger: #ff6b6b;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: rgba(13, 27, 42, 0.9);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--medium);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, var(--accent), var(--accent-dark));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 24px;
+            color: var(--dark);
+        }
+        
+        .system-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--light);
+            letter-spacing: 1px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            display: flex;
+            flex: 1;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: rgba(26, 42, 58, 0.8);
+            padding: 2rem 1rem;
+            border-right: 1px solid var(--medium);
+        }
+        
+        .sidebar h3 {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            padding-left: 10px;
+            border-left: 3px solid var(--accent);
+        }
+        
+        .nav-menu {
+            list-style: none;
+        }
+        
+        .nav-item {
+            margin-bottom: 0.8rem;
+        }
+        
+        .nav-item a {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            color: var(--light);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-item a:hover {
+            background-color: rgba(255, 154, 60, 0.2);
+            color: var(--accent);
+        }
+        
+        .nav-item.active a {
+            background-color: rgba(255, 154, 60, 0.3);
+            color: var(--accent);
+            border-left: 3px solid var(--accent);
+        }
+        
+        .nav-icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .section {
+            display: none;
+            background: rgba(26, 42, 58, 0.7);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--medium);
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--medium);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 6px;
+            border: 1px solid var(--medium);
+            background: rgba(13, 27, 42, 0.7);
+            color: var(--light);
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--accent), var(--accent-dark));
+            color: var(--dark);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #ff8a2d, #ff5a5a);
+            box-shadow: 0 4px 12px rgba(255, 106, 107, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            border: 1px solid var(--medium);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: var(--dark);
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: var(--light);
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        th, td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid var(--medium);
+        }
+        
+        th {
+            background-color: rgba(13, 27, 42, 0.7);
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background-color: rgba(255, 154, 60, 0.2);
+            color: var(--warning);
+        }
+        
+        .status-approved {
+            background-color: rgba(74, 214, 109, 0.2);
+            color: var(--success);
+        }
+        
+        .status-denied {
+            background-color: rgba(255, 107, 107, 0.2);
+            color: var(--danger);
+        }
+        
+        .status-returned {
+            background-color: rgba(77, 123, 243, 0.2);
+            color: #4d7bf3;
+        }
+        
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .card {
+            background: rgba(26, 42, 58, 0.7);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--medium);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .weapon-request .card-icon {
+            background: linear-gradient(45deg, var(--accent), var(--accent-dark));
+        }
+        
+        .weapon-management .card-icon {
+            background: linear-gradient(45deg, #4cc9f0, #4361ee);
+        }
+        
+        .reports .card-icon {
+            background: linear-gradient(45deg, #f72585, #7209b7);
+        }
+        
+        .admin .card-icon {
+            background: linear-gradient(45deg, #4ad66d, #2a9d8f);
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .card-content {
+            color: #b0b8c4;
+            line-height: 1.6;
+        }
+        
+        .card-actions {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-active {
+            background-color: var(--success);
+        }
+        
+        .status-pending {
+            background-color: var(--warning);
+        }
+        
+        footer {
+            background-color: rgba(13, 27, 42, 0.9);
+            padding: 1rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--medium);
+            margin-top: auto;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .alert-success {
+            background-color: rgba(74, 214, 109, 0.2);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+        
+        .alert-danger {
+            background-color: rgba(255, 107, 107, 0.2);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 1rem;
+            }
+            
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-
-  <h1>⚔️ Weapon Management System ⚔️</h1>
-
-  <!-- NAV -->
-  <div class="nav" id="navbar">
-    <a onclick="showSection('weapons')">Weapons</a>
-    <a onclick="showSection('cart')">Cart</a>
-    <a onclick="logout()">Logout</a>
-  </div>
-
-  <!-- LOGIN -->
-  <div id="login" class="section" style="display:flex;">
-    <div class="login-card">
-      <h2>Login Access</h2>
-      <input type="text" id="username" placeholder="👤 Username" />
-      <input type="password" id="password" placeholder="🔐 Password" />
-      <button onclick="login()">Enter</button>
-      <p id="login-msg"></p>
+    <header>
+        <div class="logo-container">
+            <div class="logo">WMS</div>
+            <h1 class="system-title">Weapon Management System</h1>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">JS</div>
+            <span>John Smith (Admin)</span>
+        </div>
+    </header>
+    
+    <div class="container">
+        <nav class="sidebar">
+            <h3>Navigation</h3>
+            <ul class="nav-menu">
+                <li class="nav-item active">
+                    <a data-section="dashboard">
+                        <span class="nav-icon">🏠</span>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a data-section="weapon-request">
+                        <span class="nav-icon">📋</span>
+                        Weapon Request
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a data-section="return-weapon">
+                        <span class="nav-icon">📦</span>
+                        Return Weapon
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a data-section="weapon-issued">
+                        <span class="nav-icon">✅</span>
+                        Weapon Issued
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a data-section="receipt">
+                        <span class="nav-icon">🧾</span>
+                        Receipt
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a data-section="reports">
+                        <span class="nav-icon">📊</span>
+                        Reports
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a data-section="weapon-info">
+                        <span class="nav-icon">➕</span>
+                        Add/Update Weapon Info
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a data-section="admin">
+                        <span class="nav-icon">👨‍💼</span>
+                        Administrator
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="section active">
+                <div class="section-header">
+                    <h2 class="section-title">Dashboard</h2>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="card weapon-request">
+                        <div class="card-header">
+                            <div class="card-icon">📋</div>
+                            <h2 class="card-title">Weapon Request</h2>
+                        </div>
+                        <div class="card-content">
+                            Submit new weapon requests, track status, and manage pending approvals.
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" data-section="weapon-request">New Request</button>
+                            <button class="btn btn-secondary">View Status</button>
+                        </div>
+                        <div class="status-indicator">
+                            <div class="status-dot status-pending"></div>
+                            <span>5 pending requests</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card weapon-management">
+                        <div class="card-header">
+                            <div class="card-icon">📦</div>
+                            <h2 class="card-title">Return Weapon</h2>
+                        </div>
+                        <div class="card-content">
+                            Process weapon returns, update inventory, and generate return receipts.
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" data-section="return-weapon">Return Weapon</button>
+                            <button class="btn btn-secondary">History</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card weapon-management">
+                        <div class="card-header">
+                            <div class="card-icon">✅</div>
+                            <h2 class="card-title">Weapon Issued</h2>
+                        </div>
+                        <div class="card-content">
+                            View all currently issued weapons and their assignment details.
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" data-section="weapon-issued">View Issued</button>
+                            <button class="btn btn-secondary">Export List</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card weapon-management">
+                        <div class="card-header">
+                            <div class="card-icon">🧾</div>
+                            <h2 class="card-title">Receipt</h2>
+                        </div>
+                        <div class="card-content">
+                            Generate and manage receipts for weapon transactions and assignments.
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" data-section="receipt">Create Receipt</button>
+                            <button class="btn btn-secondary">Archive</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card reports">
+                        <div class="card-header">
+                            <div class="card-icon">📊</div>
+                            <h2 class="card-title">Reports</h2>
+                        </div>
+                        <div class="card-content">
+                            Generate comprehensive reports on weapon usage, inventory, and transactions.
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" data-section="reports">Generate Report</button>
+                            <button class="btn btn-secondary">Templates</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card admin">
+                        <div class="card-header">
+                            <div class="card-icon">➕</div>
+                            <h2 class="card-title">Add/Update Weapon Info</h2>
+                        </div>
+                        <div class="card-content">
+                            Manage weapon database, add new entries, and update existing weapon information.
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" data-section="weapon-info">Add Weapon</button>
+                            <button class="btn btn-secondary">Update Info</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card admin">
+                        <div class="card-header">
+                            <div class="card-icon">👨‍💼</div>
+                            <h2 class="card-title">Administrator</h2>
+                        </div>
+                        <div class="card-content">
+                            System administration, user management, and configuration settings.
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" data-section="admin">Admin Panel</button>
+                            <button class="btn btn-secondary">User Management</button>
+                        </div>
+                        <div class="status-indicator">
+                            <div class="status-dot status-active"></div>
+                            <span>System operational</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Weapon Request Section -->
+            <div id="weapon-request" class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Weapon Request</h2>
+                </div>
+                
+                <div class="alert alert-success" id="request-success">
+                    Weapon request submitted successfully!
+                </div>
+                
+                <form id="weapon-request-form">
+                    <div class="form-group">
+                        <label class="form-label" for="requestor-name">Requestor Name</label>
+                        <input type="text" class="form-control" id="requestor-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="requestor-id">Requestor ID</label>
+                        <input type="text" class="form-control" id="requestor-id" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="weapon-type">Weapon Type</label>
+                        <select class="form-control" id="weapon-type" required>
+                            <option value="">Select Weapon Type</option>
+                            <option value="pistol">Pistol</option>
+                            <option value="rifle">Rifle</option>
+                            <option value="shotgun">Shotgun</option>
+                            <option value="smg">Submachine Gun</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="weapon-model">Weapon Model</label>
+                        <input type="text" class="form-control" id="weapon-model" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="purpose">Purpose of Request</label>
+                        <textarea class="form-control" id="purpose" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="duration">Duration (Days)</label>
+                        <input type="number" class="form-control" id="duration" min="1" max="30" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Submit Request</button>
+                </form>
+                
+                <div class="section-header" style="margin-top: 2rem;">
+                    <h2 class="section-title">Pending Requests</h2>
+                </div>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Requestor</th>
+                                <th>Weapon Type</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pending-requests-table">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Return Weapon Section -->
+            <div id="return-weapon" class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Return Weapon</h2>
+                </div>
+                
+                <div class="alert alert-success" id="return-success">
+                    Weapon returned successfully!
+                </div>
+                
+                <form id="return-weapon-form">
+                    <div class="form-group">
+                        <label class="form-label" for="return-request-id">Request ID</label>
+                        <input type="text" class="form-control" id="return-request-id" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="return-weapon-id">Weapon ID</label>
+                        <input type="text" class="form-control" id="return-weapon-id" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="return-condition">Weapon Condition</label>
+                        <select class="form-control" id="return-condition" required>
+                            <option value="">Select Condition</option>
+                            <option value="excellent">Excellent</option>
+                            <option value="good">Good</option>
+                            <option value="fair">Fair</option>
+                            <option value="poor">Poor</option>
+                            <option value="damaged">Damaged</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="return-notes">Notes</label>
+                        <textarea class="form-control" id="return-notes" rows="3"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Process Return</button>
+                </form>
+            </div>
+            
+            <!-- Weapon Issued Section -->
+            <div id="weapon-issued" class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Weapons Currently Issued</h2>
+                </div>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Weapon ID</th>
+                                <th>Weapon Type</th>
+                                <th>Issued To</th>
+                                <th>Issue Date</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="issued-weapons-table">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Receipt Section -->
+            <div id="receipt" class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Receipt Management</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="receipt-search">Search Receipt by ID</label>
+                    <input type="text" class="form-control" id="receipt-search" placeholder="Enter Receipt ID">
+                </div>
+                
+                <button class="btn btn-primary" id="search-receipt">Search</button>
+                
+                <div id="receipt-details" style="margin-top: 2rem; display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">🧾</div>
+                            <h2 class="card-title">Receipt #<span id="receipt-id">WMS-001</span></h2>
+                        </div>
+                        <div class="card-content">
+                            <p><strong>Date:</strong> <span id="receipt-date">2023-10-15</span></p>
+                            <p><strong>Issued To:</strong> <span id="receipt-person">John Smith</span></p>
+                            <p><strong>Weapon:</strong> <span id="receipt-weapon">Glock 17 (Pistol)</span></p>
+                            <p><strong>Weapon ID:</strong> <span id="receipt-weapon-id">WPN-001</span></p>
+                            <p><strong>Purpose:</strong> <span id="receipt-purpose">Field Operation</span></p>
+                            <p><strong>Duration:</strong> <span id="receipt-duration">7 days</span></p>
+                            <p><strong>Issued By:</strong> <span id="receipt-issuer">Admin User</span></p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" id="print-receipt">Print Receipt</button>
+                            <button class="btn btn-secondary" id="email-receipt">Email Receipt</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reports Section -->
+            <div id="reports" class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Reports</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="report-type">Report Type</label>
+                    <select class="form-control" id="report-type">
+                        <option value="inventory">Weapon Inventory</option>
+                        <option value="issued">Weapons Issued</option>
+                        <option value="returns">Weapon Returns</option>
+                        <option value="maintenance">Maintenance Schedule</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="report-period">Time Period</label>
+                    <select class="form-control" id="report-period">
+                        <option value="last-week">Last Week</option>
+                        <option value="last-month">Last Month</option>
+                        <option value="last-quarter">Last Quarter</option>
+                        <option value="last-year">Last Year</option>
+                        <option value="custom">Custom Range</option>
+                    </select>
+                </div>
+                
+                <div id="custom-range" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label" for="start-date">Start Date</label>
+                        <input type="date" class="form-control" id="start-date">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="end-date">End Date</label>
+                        <input type="date" class="form-control" id="end-date">
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" id="generate-report">Generate Report</button>
+                
+                <div id="report-results" style="margin-top: 2rem; display: none;">
+                    <div class="section-header">
+                        <h2 class="section-title">Report Results</h2>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Weapon ID</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Last Issued</th>
+                                    <th>Maintenance Due</th>
+                                </tr>
+                            </thead>
+                            <tbody id="report-table">
+                                <!-- Data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="card-actions" style="margin-top: 1rem;">
+                        <button class="btn btn-primary" id="export-report">Export to PDF</button>
+                        <button class="btn btn-secondary" id="export-csv">Export to CSV</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add/Update Weapon Info Section -->
+            <div id="weapon-info" class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Add/Update Weapon Information</h2>
+                </div>
+                
+                <div class="alert alert-success" id="weapon-success">
+                    Weapon information saved successfully!
+                </div>
+                
+                <form id="weapon-info-form">
+                    <div class="form-group">
+                        <label class="form-label" for="weapon-id">Weapon ID</label>
+                        <input type="text" class="form-control" id="weapon-id" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="weapon-type-info">Weapon Type</label>
+                        <select class="form-control" id="weapon-type-info" required>
+                            <option value="">Select Weapon Type</option>
+                            <option value="pistol">Pistol</option>
+                            <option value="rifle">Rifle</option>
+                            <option value="shotgun">Shotgun</option>
+                            <option value="smg">Submachine Gun</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="weapon-model-info">Weapon Model</label>
+                        <input type="text" class="form-control" id="weapon-model-info" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="weapon-serial">Serial Number</label>
+                        <input type="text" class="form-control" id="weapon-serial" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="weapon-caliber">Caliber</label>
+                        <input type="text" class="form-control" id="weapon-caliber" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="weapon-status">Status</label>
+                        <select class="form-control" id="weapon-status" required>
+                            <option value="available">Available</option>
+                            <option value="issued">Issued</option>
+                            <option value="maintenance">Maintenance</option>
+                            <option value="retired">Retired</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="weapon-notes">Notes</label>
+                        <textarea class="form-control" id="weapon-notes" rows="3"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Save Weapon Information</button>
+                    <button type="button" class="btn btn-secondary" id="clear-form">Clear Form</button>
+                </form>
+                
+                <div class="section-header" style="margin-top: 2rem;">
+                    <h2 class="section-title">Weapon Inventory</h2>
+                </div>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Weapon ID</th>
+                                <th>Type</th>
+                                <th>Model</th>
+                                <th>Serial</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="weapon-inventory-table">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Administrator Section -->
+            <div id="admin" class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Administrator Panel</h2>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="card admin">
+                        <div class="card-header">
+                            <div class="card-icon">👥</div>
+                            <h2 class="card-title">User Management</h2>
+                        </div>
+                        <div class="card-content">
+                            Manage system users, roles, and permissions.
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" id="manage-users">Manage Users</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card admin">
+                        <div class="card-header">
+                            <div class="card-icon">⚙️</div>
+                            <h2 class="card-title">System Settings</h2>
+                        </div>
+                        <div class="card-content">
+                            Configure system parameters and preferences.
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" id="system-settings">Settings</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card admin">
+                        <div class="card-header">
+                            <div class="card-icon">📈</div>
+                            <h2 class="card-title">System Analytics</h2>
+                        </div>
+                        <div class="card-content">
+                            View system usage statistics and performance metrics.
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" id="view-analytics">View Analytics</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card admin">
+                        <div class="card-header">
+                            <div class="card-icon">🔒</div>
+                            <h2 class="card-title">Security & Logs</h2>
+                        </div>
+                        <div class="card-content">
+                            Monitor security events and access logs.
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" id="security-logs">View Logs</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-header" style="margin-top: 2rem;">
+                    <h2 class="section-title">System Information</h2>
+                </div>
+                
+                <div class="card">
+                    <div class="card-content">
+                        <p><strong>System Version:</strong> WMS v2.1.4</p>
+                        <p><strong>Last Backup:</strong> 2023-10-14 23:45</p>
+                        <p><strong>Database Status:</strong> <span class="status-badge status-approved">Connected</span></p>
+                        <p><strong>Active Users:</strong> 12</p>
+                        <p><strong>Weapons in System:</strong> 247</p>
+                        <p><strong>Pending Requests:</strong> 5</p>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-  </div>
+    
+    <footer>
+        <p>Weapon Management System &copy; 2023 | Secure • Efficient • Reliable</p>
+    </footer>
 
-  <!-- WEAPONS SECTION -->
-  <div id="weapons" class="section">
-    <h2>Available Weapons</h2>
-    <div class="weapon-grid">
-      <div class="weapon-card">
-        <img src="ak47.jpg" alt="AK-47">
-        <h3>AK-47</h3>
-        <p>Price: $700</p>
-        <button onclick="addToCart('AK-47',700)">Add to Cart</button>
-      </div>
-      <div class="weapon-card">
-        <img src="m16.jpg" alt="M16">
-        <h3>M16</h3>
-        <p>Price: $900</p>
-        <button onclick="addToCart('M16',900)">Add to Cart</button>
-      </div>
-      <div class="weapon-card">
-        <img src="m4.jpg" alt="M4 Carbine">
-        <h3>M4 Carbine</h3>
-        <p>Price: $1200</p>
-        <button onclick="addToCart('M4 Carbine',1200)">Add to Cart</button>
-      </div>
-      <div class="weapon-card">
-        <img src="svd.jpg" alt="SVD Sniper">
-        <h3>SVD Sniper</h3>
-        <p>Price: $2500</p>
-        <button onclick="addToCart('SVD Sniper',2500)">Add to Cart</button>
-      </div>
-      <div class="weapon-card">
-        <img src="uzi.jpg" alt="Uzi">
-        <h3>Uzi</h3>
-        <p>Price: $650</p>
-        <button onclick="addToCart('Uzi',650)">Add to Cart</button>
-      </div>
-      <div class="weapon-card">
-        <img src="rpg.jpg" alt="RPG-7">
-        <h3>RPG-7</h3>
-        <p>Price: $5000</p>
-        <button onclick="addToCart('RPG-7',5000)">Add to Cart</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- CART SECTION -->
-  <div id="cart" class="section">
-    <h2>Your Cart</h2>
-    <div id="cart-items"></div>
-  </div>
-
-  <script>
-    let currentUser = null;
-    let cart = [];
-
-    function showSection(sectionId) {
-      document.querySelectorAll('.section').forEach(sec => sec.style.display = 'none');
-      document.getElementById(sectionId).style.display = 'block';
-    }
-
-    function login() {
-      const user = document.getElementById('username').value;
-      const pass = document.getElementById('password').value;
-      if (user === 'admin' && pass === 'password123') {
-        currentUser = user;
-        document.getElementById('login').style.display = 'none';
-        document.getElementById('navbar').style.display = 'flex';
-        showSection('weapons');
-      } else {
-        document.getElementById('login-msg').textContent = 'Invalid credentials';
-      }
-    }
-
-    function logout() {
-      currentUser = null;
-      cart = [];
-      document.getElementById('navbar').style.display = 'none';
-      document.querySelectorAll('.section').forEach(sec => sec.style.display = 'none');
-      document.getElementById('login').style.display = 'flex';
-    }
-
-    function addToCart(name, price) {
-      cart.push({ name, price });
-      alert(name + " added to cart!");
-    }
-
-    function showCart() {
-      const cartDiv = document.getElementById('cart-items');
-      cartDiv.innerHTML = "";
-      if (cart.length === 0) {
-        cartDiv.innerHTML = "<p>Cart is empty</p>";
-        return;
-      }
-      let total = 0;
-      cart.forEach(item => {
-        total += item.price;
-        cartDiv.innerHTML += `<p>${item.name} - $${item.price}</p>`;
-      });
-      cartDiv.innerHTML += `<hr><p><strong>Total: $${total}</strong></p>`;
-    }
-
-    // Update cart whenever "Cart" section is opened
-    document.querySelector(".nav a:nth-child(2)").addEventListener("click", showCart);
-  </script>
-
+    <script>
+        // Navigation functionality
+        document.querySelectorAll('.nav-item a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Update active nav item
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.parentElement.classList.add('active');
+                
+                // Show corresponding section
+                const sectionId = this.getAttribute('data-section');
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+        
+        // Dashboard card navigation
+        document.querySelectorAll('.card-actions .btn-primary').forEach(button => {
+            if (button.hasAttribute('data-section')) {
+                button.addEventListener('click', function() {
+                    const sectionId = this.getAttribute('data-section');
+                    
+                    // Update active nav item
+                    document.querySelectorAll('.nav-item').forEach(item => {
+                        item.classList.remove('active');
+                        if (item.querySelector('a').getAttribute('data-section') === sectionId) {
+                            item.classList.add('active');
+                        }
+                    });
+                    
+                    // Show corresponding section
+                    document.querySelectorAll('.section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    document.getElementById(sectionId).classList.add('active');
+                });
+            }
+        });
+        
+        // Sample data for demonstration
+        const sampleData = {
+            pendingRequests: [
+                { id: 'REQ-001', requestor: 'John Doe', weaponType: 'Pistol', date: '2023-10-15', status: 'Pending' },
+                { id: 'REQ-002', requestor: 'Jane Smith', weaponType: 'Rifle', date: '2023-10-14', status: 'Pending' },
+                { id: 'REQ-003', requestor: 'Robert Johnson', weaponType: 'Shotgun', date: '2023-10-13', status: 'Pending' }
+            ],
+            issuedWeapons: [
+                { id: 'WPN-001', type: 'Pistol', issuedTo: 'Michael Brown', issueDate: '2023-10-10', dueDate: '2023-10-17', status: 'Active' },
+                { id: 'WPN-005', type: 'Rifle', issuedTo: 'Sarah Wilson', issueDate: '2023-10-12', dueDate: '2023-10-19', status: 'Active' },
+                { id: 'WPN-012', type: 'Shotgun', issuedTo: 'David Miller', issueDate: '2023-10-08', dueDate: '2023-10-15', status: 'Overdue' }
+            ],
+            weaponInventory: [
+                { id: 'WPN-001', type: 'Pistol', model: 'Glock 17', serial: 'GLK-001', status: 'Issued' },
+                { id: 'WPN-002', type: 'Pistol', model: 'Sig Sauer P320', serial: 'SIG-001', status: 'Available' },
+                { id: 'WPN-003', type: 'Rifle', model: 'M4 Carbine', serial: 'M4-001', status: 'Available' },
+                { id: 'WPN-004', type: 'Rifle', model: 'AK-47', serial: 'AK-001', status: 'Maintenance' },
+                { id: 'WPN-005', type: 'Rifle', model: 'AR-15', serial: 'AR-001', status: 'Issued' }
+            ]
+        };
+        
+        // Populate tables with sample data
+        function populateTables() {
+            // Pending Requests Table
+            const pendingRequestsTable = document.getElementById('pending-requests-table');
+            pendingRequestsTable.innerHTML = '';
+            
+            sampleData.pendingRequests.forEach(request => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${request.id}</td>
+                    <td>${request.requestor}</td>
+                    <td>${request.weaponType}</td>
+                    <td>${request.date}</td>
+                    <td><span class="status-badge status-pending">${request.status}</span></td>
+                    <td>
+                        <button class="btn btn-success btn-sm">Approve</button>
+                        <button class="btn btn-danger btn-sm">Deny</button>
+                    </td>
+                `;
+                pendingRequestsTable.appendChild(row);
+            });
+            
+            // Issued Weapons Table
+            const issuedWeaponsTable = document.getElementById('issued-weapons-table');
+            issuedWeaponsTable.innerHTML = '';
+            
+            sampleData.issuedWeapons.forEach(weapon => {
+                const statusClass = weapon.status === 'Overdue' ? 'status-denied' : 'status-approved';
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${weapon.id}</td>
+                    <td>${weapon.type}</td>
+                    <td>${weapon.issuedTo}</td>
+                    <td>${weapon.issueDate}</td>
+                    <td>${weapon.dueDate}</td>
+                    <td><span class="status-badge ${statusClass}">${weapon.status}</span></td>
+                    <td>
+                        <button class="btn btn-secondary btn-sm">View Details</button>
+                    </td>
+                `;
+                issuedWeaponsTable.appendChild(row);
+            });
+            
+            // Weapon Inventory Table
+            const weaponInventoryTable = document.getElementById('weapon-inventory-table');
+            weaponInventoryTable.innerHTML = '';
+            
+            sampleData.weaponInventory.forEach(weapon => {
+                let statusClass = 'status-pending';
+                if (weapon.status === 'Available') statusClass = 'status-approved';
+                if (weapon.status === 'Issued') statusClass = 'status-returned';
+                if (weapon.status === 'Maintenance') statusClass = 'status-denied';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${weapon.id}</td>
+                    <td>${weapon.type}</td>
+                    <td>${weapon.model}</td>
+                    <td>${weapon.serial}</td>
+                    <td><span class="status-badge ${statusClass}">${weapon.status}</span></td>
+                    <td>
+                        <button class="btn btn-secondary btn-sm">Edit</button>
+                    </td>
+                `;
+                weaponInventoryTable.appendChild(row);
+            });
+        }
+        
+        // Form submission handlers
+        document.getElementById('weapon-request-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('request-success').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('request-success').style.display = 'none';
+            }, 3000);
+            this.reset();
+        });
+        
+        document.getElementById('return-weapon-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('return-success').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('return-success').style.display = 'none';
+            }, 3000);
+            this.reset();
+        });
+        
+        document.getElementById('weapon-info-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('weapon-success').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('weapon-success').style.display = 'none';
+            }, 3000);
+        });
+        
+        document.getElementById('clear-form').addEventListener('click', function() {
+            document.getElementById('weapon-info-form').reset();
+        });
+        
+        // Receipt search functionality
+        document.getElementById('search-receipt').addEventListener('click', function() {
+            document.getElementById('receipt-details').style.display = 'block';
+        });
+        
+        // Report generation functionality
+        document.getElementById('generate-report').addEventListener('click', function() {
+            document.getElementById('report-results').style.display = 'block';
+            
+            // Populate report table with sample data
+            const reportTable = document.getElementById('report-table');
+            reportTable.innerHTML = '';
+            
+            sampleData.weaponInventory.forEach(weapon => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${weapon.id}</td>
+                    <td>${weapon.type}</td>
+                    <td>${weapon.status}</td>
+                    <td>2023-10-10</td>
+                    <td>2023-11-15</td>
+                `;
+                reportTable.appendChild(row);
+            });
+        });
+        
+        // Show custom date range when selected
+        document.getElementById('report-period').addEventListener('change', function() {
+            if (this.value === 'custom') {
+                document.getElementById('custom-range').style.display = 'block';
+            } else {
+                document.getElementById('custom-range').style.display = 'none';
+            }
+        });
+        
+        // Admin panel buttons
+        document.getElementById('manage-users').addEventListener('click', function() {
+            alert('User management functionality would open here in a real application.');
+        });
+        
+        document.getElementById('system-settings').addEventListener('click', function() {
+            alert('System settings panel would open here in a real application.');
+        });
+        
+        document.getElementById('view-analytics').addEventListener('click', function() {
+            alert('Analytics dashboard would open here in a real application.');
+        });
+        
+        document.getElementById('security-logs').addEventListener('click', function() {
+            alert('Security logs would open here in a real application.');
+        });
+        
+        // Print receipt functionality
+        document.getElementById('print-receipt').addEventListener('click', function() {
+            alert('Printing receipt...');
+        });
+        
+        // Email receipt functionality
+        document.getElementById('email-receipt').addEventListener('click', function() {
+            alert('Emailing receipt...');
+        });
+        
+        // Export report functionality
+        document.getElementById('export-report').addEventListener('click', function() {
+            alert('Exporting report to PDF...');
+        });
+        
+        document.getElementById('export-csv').addEventListener('click', function() {
+            alert('Exporting report to CSV...');
+        });
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            populateTables();
+        });
+    </script>
 </body>
 </html>
